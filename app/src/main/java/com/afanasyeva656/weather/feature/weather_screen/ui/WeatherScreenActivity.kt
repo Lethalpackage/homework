@@ -27,7 +27,7 @@ class WeatherScreenActivity : AppCompatActivity() {
     }
 
     private fun render(state: ViewState) {
-        findViewById<TextView>(R.id.tvTempeture).let { it.text = state.WeatherList.toString() }
+        findViewById<TextView>(R.id.tvTempeture).let { it.text = state.weatherModel.toString() }
 
         findViewById<Button>(R.id.buttonWind).setOnClickListener {
             Intent(this, WindScreenActivity::class.java).also { startActivity(it) }
