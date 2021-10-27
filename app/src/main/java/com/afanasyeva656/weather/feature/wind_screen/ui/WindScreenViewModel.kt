@@ -7,11 +7,22 @@ import com.afanasyeva656.weather.feature.weather_screen.domain.WeatherInteractor
 import com.afanasyeva656.weather.feature.weather_screen.domain.model.WeatherDomainModel
 import kotlinx.coroutines.launch
 
-class WindScreenViewModel(private val weatherInteractor: WeatherInteractor):ViewModel() {
-    val liveData: MutableLiveData<WeatherDomainModel> = MutableLiveData()
-    fun getWind(){
+class WindScreenViewModel(private val weatherInteractor: WeatherInteractor) : ViewModel() {
+
+    val liveData = MutableLiveData<WeatherDomainModel>()
+
+    fun getWind() {
         viewModelScope.launch {
-            liveData.postValue(weatherInteractor.getWeather())
+            val value = weatherInteractor.getWeather()
+
+            value.fold(
+                onError = {},
+                onSuccess = {
+                    liveData.value = it
+                }
+            )
+
+
         }
     }
 

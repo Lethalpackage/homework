@@ -9,22 +9,29 @@ import androidx.lifecycle.Observer
 import com.afanasyeva656.weather.R
 import com.afanasyeva656.weather.feature.weather_screen.domain.model.WeatherDomainModel
 import com.afanasyeva656.weather.feature.wind_screen.ui.WindScreenActivity
-import org.koin.android.viewmodel.ext.android.viewModel
+
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WeatherScreenActivity : AppCompatActivity() {
-    val weatherScreenViewModel by viewModel<WeatherScreenViewModel>()
+  private val weatherScreenViewModel by viewModel<WeatherScreenViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_weather)
-        weatherScreenViewModel.liveData.observe(this, Observer(::render))
-        weatherScreenViewModel.requestWeather()
+
+        weatherScreenViewModel.viewState.observe(this, Observer(::render))
+        weatherScreenViewModel.processUiEvent(UIEvent.GetWeather)
+
+
+    }
+
+    private fun render(state: ViewState) {
+        findViewById<TextView>(R.id.tvTempeture).let { it.text = state.WeatherList.toString() }
+
         findViewById<Button>(R.id.buttonWind).setOnClickListener {
             Intent(this, WindScreenActivity::class.java).also { startActivity(it) }
         }
     }
 
-    private fun render(state: WeatherDomainModel) {
-        findViewById<TextView>(R.id.tvTempeture).let { it.text = state.temperature }
-    }
 }
